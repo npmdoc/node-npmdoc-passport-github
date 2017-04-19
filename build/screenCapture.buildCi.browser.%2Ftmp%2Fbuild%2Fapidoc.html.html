@@ -56,6 +56,15 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.passport-github.passport-github">
+            function <span class="apidocSignatureSpan"></span>passport-github
+            <span class="apidocSignatureSpan">(options, verify)</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <a class="apidocElementLiA" href="#apidoc.element.passport-github.Strategy">
             function <span class="apidocSignatureSpan">passport-github.</span>Strategy
             <span class="apidocSignatureSpan">(options, verify)</span>
@@ -92,6 +101,12 @@
 
         <li>
 
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">passport-github.</span>Strategy.prototype</span>
+
+        </li>
+
+        <li>
+
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">passport-github.</span>profile</span>
 
         </li>
@@ -111,6 +126,41 @@
         <li>
 
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">passport-github.</span>super_.super_.prototype</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.passport-github.Strategy">module passport-github.Strategy</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.passport-github.Strategy.Strategy">
+            function <span class="apidocSignatureSpan">passport-github.</span>Strategy
+            <span class="apidocSignatureSpan">(options, verify)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.passport-github.Strategy.super_">
+            function <span class="apidocSignatureSpan">passport-github.Strategy.</span>super_
+            <span class="apidocSignatureSpan">(options, verify)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.passport-github.Strategy.prototype">module passport-github.Strategy.prototype</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.passport-github.Strategy.prototype.userProfile">
+            function <span class="apidocSignatureSpan">passport-github.Strategy.prototype.</span>userProfile
+            <span class="apidocSignatureSpan">(accessToken, done)</span>
+            </a>
 
         </li>
 
@@ -313,6 +363,53 @@
 
 
     <h2>
+        <a href="#apidoc.element.passport-github.passport-github" id="apidoc.element.passport-github.passport-github">
+        function <span class="apidocSignatureSpan"></span>passport-github
+        <span class="apidocSignatureSpan">(options, verify)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function Strategy(options, verify) {
+  options = options || {};
+  options.authorizationURL = options.authorizationURL || 'https://github.com/login/oauth/authorize';
+  options.tokenURL = options.tokenURL || 'https://github.com/login/oauth/access_token';
+  options.scopeSeparator = options.scopeSeparator || ',';
+  options.customHeaders = options.customHeaders || {};
+
+  if (!options.customHeaders['User-Agent']) {
+    options.customHeaders['User-Agent'] = options.userAgent || 'passport-github';
+  }
+
+  OAuth2Strategy.call(this, options, verify);
+  this.name = 'github';
+  this._userProfileURL = options.userProfileURL || 'https://api.github.com/user';
+  this._oauth2.useAuthorizationHeaderforGET(true);
+
+  // NOTE: GitHub returns an HTTP 200 OK on error responses.  As a result, the
+  //       underlying `oauth` implementation understandably does not parse the
+  //       response as an error.  This code swizzles the implementation to
+  //       handle this condition.
+  var self = this;
+  var _oauth2_getOAuthAccessToken = this._oauth2.getOAuthAccessToken;
+  this._oauth2.getOAuthAccessToken = function(code, params, callback) {
+    _oauth2_getOAuthAccessToken.call(self._oauth2, code, params, function(err, accessToken, refreshToken, params) {
+      if (err) { return callback(err); }
+      if (!accessToken) {
+        return callback({
+          statusCode: 400,
+          data: JSON.stringify(params)
+        });
+      }
+      callback(null, accessToken, refreshToken, params);
+    });
+  }
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
         <a href="#apidoc.element.passport-github.Strategy" id="apidoc.element.passport-github.Strategy">
         function <span class="apidocSignatureSpan">passport-github.</span>Strategy
         <span class="apidocSignatureSpan">(options, verify)</span>
@@ -449,6 +546,201 @@
 
 
 
+
+
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.passport-github.Strategy" id="apidoc.module.passport-github.Strategy">module passport-github.Strategy</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.passport-github.Strategy.Strategy" id="apidoc.element.passport-github.Strategy.Strategy">
+        function <span class="apidocSignatureSpan">passport-github.</span>Strategy
+        <span class="apidocSignatureSpan">(options, verify)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function Strategy(options, verify) {
+  options = options || {};
+  options.authorizationURL = options.authorizationURL || 'https://github.com/login/oauth/authorize';
+  options.tokenURL = options.tokenURL || 'https://github.com/login/oauth/access_token';
+  options.scopeSeparator = options.scopeSeparator || ',';
+  options.customHeaders = options.customHeaders || {};
+
+  if (!options.customHeaders['User-Agent']) {
+    options.customHeaders['User-Agent'] = options.userAgent || 'passport-github';
+  }
+
+  OAuth2Strategy.call(this, options, verify);
+  this.name = 'github';
+  this._userProfileURL = options.userProfileURL || 'https://api.github.com/user';
+  this._oauth2.useAuthorizationHeaderforGET(true);
+
+  // NOTE: GitHub returns an HTTP 200 OK on error responses.  As a result, the
+  //       underlying `oauth` implementation understandably does not parse the
+  //       response as an error.  This code swizzles the implementation to
+  //       handle this condition.
+  var self = this;
+  var _oauth2_getOAuthAccessToken = this._oauth2.getOAuthAccessToken;
+  this._oauth2.getOAuthAccessToken = function(code, params, callback) {
+    _oauth2_getOAuthAccessToken.call(self._oauth2, code, params, function(err, accessToken, refreshToken, params) {
+      if (err) { return callback(err); }
+      if (!accessToken) {
+        return callback({
+          statusCode: 400,
+          data: JSON.stringify(params)
+        });
+      }
+      callback(null, accessToken, refreshToken, params);
+    });
+  }
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.passport-github.Strategy.super_" id="apidoc.element.passport-github.Strategy.super_">
+        function <span class="apidocSignatureSpan">passport-github.Strategy.</span>super_
+        <span class="apidocSignatureSpan">(options, verify)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function OAuth2Strategy(options, verify) {
+  if (typeof options == 'function') {
+    verify = options;
+    options = undefined;
+  }
+  options = options || {};
+
+  if (!verify) { throw new TypeError('OAuth2Strategy requires a verify callback'); }
+  if (!options.authorizationURL) { throw new TypeError('OAuth2Strategy requires a authorizationURL option'); }
+  if (!options.tokenURL) { throw new TypeError('OAuth2Strategy requires a tokenURL option'); }
+  if (!options.clientID) { throw new TypeError('OAuth2Strategy requires a clientID option'); }
+
+  passport.Strategy.call(this);
+  this.name = 'oauth2';
+  this._verify = verify;
+
+  // NOTE: The _oauth2 property is considered "protected".  Subclasses are
+  //       allowed to use it when making protected resource requests to retrieve
+  //       the user profile.
+  this._oauth2 = new OAuth2(options.clientID,  options.clientSecret,
+      '', options.authorizationURL, options.tokenURL, options.customHeaders);
+
+  this._callbackURL = options.callbackURL;
+  this._scope = options.scope;
+  this._scopeSeparator = options.scopeSeparator || ' ';
+  this._key = options.sessionKey || ('oauth2:' + url.parse(options.authorizationURL).hostname);
+
+  if (options.store) {
+    this._stateStore = options.store;
+  } else {
+    if (options.state) {
+      this._stateStore = new SessionStateStore({ key: this._key });
+    } else {
+      this._stateStore = new NullStateStore();
+    }
+  }
+  this._trustProxy = options.proxy;
+  this._passReqToCallback = options.passReqToCallback;
+  this._skipUserProfile = (options.skipUserProfile === undefined) ? false : options.skipUserProfile;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.passport-github.Strategy.prototype" id="apidoc.module.passport-github.Strategy.prototype">module passport-github.Strategy.prototype</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.passport-github.Strategy.prototype.userProfile" id="apidoc.element.passport-github.Strategy.prototype.userProfile">
+        function <span class="apidocSignatureSpan">passport-github.Strategy.prototype.</span>userProfile
+        <span class="apidocSignatureSpan">(accessToken, done)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">userProfile = function (accessToken, done) {
+  var self = this;
+  this._oauth2.get(this._userProfileURL, accessToken, function (err, body, res) {
+    var json;
+
+    if (err) {
+      if (err.data) {
+        try {
+          json = JSON.parse(err.data);
+        } catch (_) {}
+      }
+
+      if (json &amp;&amp; json.message) {
+        return done(new APIError(json.message));
+      }
+      return done(new InternalOAuthError('Failed to fetch user profile', err));
+    }
+
+    try {
+      json = JSON.parse(body);
+    } catch (ex) {
+      return done(new Error('Failed to parse user profile'));
+    }
+
+    var profile = Profile.parse(json);
+    profile.provider  = 'github';
+    profile._raw = body;
+    profile._json = json;
+
+
+    if (self._scope &amp;&amp; self._scope.indexOf('user:email') !== -1) {
+      self._oauth2._request('GET', self._userProfileURL + '/emails', { 'Accept': 'application/vnd.github.v3+json' }, '', accessToken
+, function(err, body, res) {
+        if (err) {
+          // If the attempt to fetch email addresses fails, return the profile
+          // information that was obtained.
+          return done(null, profile);
+        }
+
+        var json;
+        try {
+          json = JSON.parse(body);
+        } catch (_) {
+          // If the attempt to parse email addresses fails, return the profile
+          // information that was obtained.
+          return done(null, profile);
+        }
+
+
+        if (!json.length) {
+          return done(null, profile);
+        }
+
+        profile.emails = profile.emails || [];
+        var publicEmail = profile.emails[0];
+
+        (json).forEach(function(email) {
+          if (publicEmail &amp;&amp; publicEmail.value == email.email) {
+            profile.emails[0].primary = email.primary;
+            profile.emails[0].verified = email.verified;
+          } else {
+            profile.emails.push({ value: email.email, primary: email.primary, verified: email.verified })
+          }
+        });
+        done(null, profile);
+      });
+    }
+    else {
+      done(null, profile);
+    }
+  });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
 
 
 </div>
